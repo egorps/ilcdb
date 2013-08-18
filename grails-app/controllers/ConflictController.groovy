@@ -99,4 +99,20 @@ class ConflictController
         else
             render(view:'create',model:[conflict:conflict])
     }
+
+    def viewConflicts =
+    {
+        def client = Client.get(params.clientid)
+        def lastName = client.client.lastName
+        def firstName = client.client.firstName
+
+        def exactMatches = Conflict.findByLastNameAndFirstName(lastName, firstName)
+        def matchFirstNamePart = Conflict.findByLastNameAndFirstNameLike(lastName, firstName+"%")
+        matchFirstNamePart = matchFirstNamePart - exactMatches
+        def matchFirstLetterFirstName = Conflict.findByLastNameAndFirstNameLike(lastName, firstName[0]+"%")
+        matchFirstLetterFirstName = matchFirstLetterFirstName - matchFirstNamePart
+
+        return [client: client, high: exactMatches, medium:matchFirstNamePart, low: matchFirstLetterFirstName]
+    }
 }
+

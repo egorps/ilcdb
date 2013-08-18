@@ -229,12 +229,11 @@ class ClientController
                 address.save()
                 placeOfBirth.save()
                 person.save()
-                client.client = person
                 client.save()
 
                 flash.message = "Client ${client.id} created"
                 // redirect to the newly created intake so that it can be edited if so desired
-                redirect(controller:"clientCase", action:"edit", id:clientCase.id)
+                redirect(controller:"conflict", action:"viewConflicts", params:[clientid:client.id])
             }
             else
             {
